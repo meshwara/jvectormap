@@ -77,11 +77,16 @@ jvm.MultiMap.prototype = {
     return this.maps[name];
   },
 
-  downloadMap: function(code){
+  downloadMap: function(code, config){
     var that = this,
         deferred = jvm.$.Deferred();
 
     if (!this.mapsLoaded[code]) {
+      if (config.noDownload){
+        deferred.resolve()
+        return deferred
+      }
+      
       jvm.$.get(this.params.mapUrlByCode(code, this)).then(function(){
         that.mapsLoaded[code] = true;
         deferred.resolve();
@@ -105,7 +110,7 @@ jvm.MultiMap.prototype = {
     var currentMap = this.history[this.history.length - 1],
         that = this,
         focusPromise = currentMap.setFocus({region: code, animate: true}),
-        downloadPromise = this.downloadMap(code);
+        downloadPromise = this.downloadMap(code, customSettings);
 
     focusPromise.then(function(){
       if (downloadPromise.state() === 'pending') {
