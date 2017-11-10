@@ -44,7 +44,7 @@ jvm.MultiMap = function(params) {
 };
 
 jvm.MultiMap.prototype = {
-  addMap: function(name, config){
+  addMap: function(name, code, config){
     var cnt = jvm.$('<div/>').css({
       width: '100%',
       height: '100%'
@@ -55,7 +55,7 @@ jvm.MultiMap.prototype = {
     this.maps[name] = new jvm.Map(jvm.$.extend(config, {container: cnt}));
     // raise event
     if (config.onMultimapLoaded){
-        config.onMultimapLoaded(this.maps[name])
+        config.onMultimapLoaded(this.maps[name],code)
     }
 
     if (this.params.maxLevel > config.multiMapLevel) {
@@ -110,7 +110,7 @@ jvm.MultiMap.prototype = {
     this.drillDownPromise.then(function(){
       currentMap.params.container.hide();
       if (!that.maps[name]) {
-        that.addMap(name, $.extend({ map: name, multiMapLevel: currentMap.params.multiMapLevel + 1 }, customSettings));
+        that.addMap(name, code, $.extend({ map: name, multiMapLevel: currentMap.params.multiMapLevel + 1 }, customSettings));
       } else {
         that.maps[name].params.container.show();
       }
