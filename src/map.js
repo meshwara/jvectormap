@@ -556,7 +556,7 @@ jvm.Map.prototype = {
     this.tip = jvm.$('<div/>').addClass('jvectormap-tip').appendTo(jvm.$('body'));
 
     this.container.mousemove(function(e){
-      var left = e.pageX-15-map.tipWidth,
+      var left = e.pageX-Math.round(map.tipWidth/2),
           top = e.pageY-15-map.tipHeight;
 
       if (left < 5) {
