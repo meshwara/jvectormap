@@ -1,0 +1,7 @@
+* text=auto
+*.css linguist-vendored
+*.scss linguist-vendored
+*.js linguist-vendored
+dist/*.js -diff -merge -text
+dist/*.css -diff -merge -text
+CHANGELOG.md export-ignore
