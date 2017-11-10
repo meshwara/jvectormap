@@ -53,6 +53,11 @@ jvm.MultiMap.prototype = {
     this.params.container.append(cnt);
 
     this.maps[name] = new jvm.Map(jvm.$.extend(config, {container: cnt}));
+    // raise event
+    if (config.onMultimapLoaded){
+        config.onMultimapLoaded(this.maps[name])
+    }
+
     if (this.params.maxLevel > config.multiMapLevel) {
       this.maps[name].container.on('regionClick.jvectormap', {scope: this}, function(e, code){
         var multimap = e.data.scope,
@@ -91,6 +96,8 @@ jvm.MultiMap.prototype = {
         focusPromise = currentMap.setFocus({region: code, animate: true}),
         downloadPromise = this.downloadMap(code);
 
+    customSettings = this.params.subMapsOptions || {};
+
     focusPromise.then(function(){
       if (downloadPromise.state() === 'pending') {
         that.spinner.show();
@@ -103,7 +110,7 @@ jvm.MultiMap.prototype = {
     this.drillDownPromise.then(function(){
       currentMap.params.container.hide();
       if (!that.maps[name]) {
-        that.addMap(name, {map: name, multiMapLevel: currentMap.params.multiMapLevel + 1});
+        that.addMap(name, $.extend({ map: name, multiMapLevel: currentMap.params.multiMapLevel + 1 }, customSettings));
       } else {
         that.maps[name].params.container.show();
       }
