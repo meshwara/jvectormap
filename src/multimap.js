@@ -44,7 +44,7 @@ jvm.MultiMap = function(params) {
 };
 
 jvm.MultiMap.prototype = {
-  addMap: function(name, code, config){
+  addMap: function(name, config){
     var cnt = jvm.$('<div/>').css({
       width: '100%',
       height: '100%'
@@ -55,8 +55,12 @@ jvm.MultiMap.prototype = {
     this.maps[name] = new jvm.Map(jvm.$.extend(config, {container: cnt}));
     // raise event
     if (config.onMultimapLoaded){
-        config.onMultimapLoaded(this.maps[name],code)
+        config.onMultimapLoaded(this.maps[name],config.multiCode)
     }
+    if (config.onMultimapShow){
+        config.onMultimapShow(this.maps[name])
+    }
+
 
     if (this.params.maxLevel > config.multiMapLevel) {
       this.maps[name].container.on('regionClick.jvectormap', {scope: this}, function(e, code){
@@ -91,12 +95,17 @@ jvm.MultiMap.prototype = {
   },
 
   drillDown: function(name, code){
+    var allow = true
+    customSettings = this.params.subMapsOptions || {};
+    if (customSettings.onBeforeDrillDown){
+      allow = customSettings.onBeforeDrillDown(name, code)
+    }
+    if (!allow) return;
+
     var currentMap = this.history[this.history.length - 1],
         that = this,
         focusPromise = currentMap.setFocus({region: code, animate: true}),
         downloadPromise = this.downloadMap(code);
-
-    customSettings = this.params.subMapsOptions || {};
 
     focusPromise.then(function(){
       if (downloadPromise.state() === 'pending') {
@@ -110,9 +119,12 @@ jvm.MultiMap.prototype = {
     this.drillDownPromise.then(function(){
       currentMap.params.container.hide();
       if (!that.maps[name]) {
-        that.addMap(name, code, $.extend({ map: name, multiMapLevel: currentMap.params.multiMapLevel + 1 }, customSettings));
+        that.addMap(name, $.extend({ map: name, multiCode:code, multiMapLevel: currentMap.params.multiMapLevel + 1 }, customSettings));
       } else {
         that.maps[name].params.container.show();
+        if (customSettings.onMultimapShow){
+            customSettings.onMultimapShow(that.maps[name])
+        }
       }
       that.history.push( that.maps[name] );
       that.backButton.show();
