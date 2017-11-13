@@ -149,7 +149,12 @@ jvm.MultiMap.prototype = {
         that.backButton.hide();
       }
       prevMap.setFocus({scale: 1, x: 0.5, y: 0.5, animate: true});
-    });
+    })
+    .then(function(){
+      if (prevMap.params.onGoBack){
+        prevMap.params.onGoBack(prevMap);
+      }
+    })
   }
 };
 
