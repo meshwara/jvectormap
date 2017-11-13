@@ -98,18 +98,27 @@ jvm.MultiMap.prototype = {
     }
     return deferred;
   },
+  manualDrillDown: function(scope,code){
+      var multimap = scope,
+          mapName = multimap.params.mapNameByCode(code, multimap);
+
+      if (!multimap.drillDownPromise || multimap.drillDownPromise.state() !== 'pending') {
+        multimap.drillDown(mapName, code);
+      }
+  },
 
   drillDown: function(name, code){
-    var allow = true
-    customSettings = this.params.subMapsOptions || {};
-    if (customSettings.onBeforeDrillDown){
-      allow = customSettings.onBeforeDrillDown(name, code)
+    var allow = true,
+        currentMap = this.history[this.history.length - 1],
+        that = this,
+        customSettings = this.params.subMapsOptions || {};
+
+    if (currentMap.params.onBeforeDrillDown){
+      allow = currentMap.params.onBeforeDrillDown(name, code)
     }
     if (!allow) return;
 
-    var currentMap = this.history[this.history.length - 1],
-        that = this,
-        focusPromise = currentMap.setFocus({region: code, animate: true}),
+    var focusPromise = currentMap.setFocus({region: code, animate: true}),
         downloadPromise = this.downloadMap(code, customSettings);
 
     focusPromise.then(function(){
