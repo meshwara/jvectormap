@@ -109,7 +109,7 @@ jvm.DataSeries.prototype = {
       }
     } else {
       for (cc in values) {
-        if (values[cc]) {
+        if (values[cc] || typeof(values[cc])!=='undefined') {
           attrs[cc] = this.scale.getValue(values[cc]);
         } else {
           attrs[cc] = this.elements[cc].element.style.initial[this.params.attribute];
