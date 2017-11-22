@@ -37,6 +37,8 @@ files=( \
 )
 
 baseDir=`dirname $0`
+bundle=dist/jquery.jvectormap.js
+minified=dist/jquery.jvectormap.min.js
 
 counter=0
 while [ $counter -lt ${#files[@]} ]; do
@@ -44,18 +46,17 @@ while [ $counter -lt ${#files[@]} ]; do
   let counter=counter+1
 done
 
-if [ -z "$1" ]
-  then
-    minified=dist/jquery.jvectormap.min.js
-  else
-    minified=$1
-fi
-
 if [ -a $minified ]
   then
     rm $minified
 fi
 
+if [ -a $bundle ]
+  then
+    rm $bundle
+fi
+
 cat ${files[*]} >> $minified
+cat ${files[*]} >> $bundle
 
 uglifyjs $minified -o $minified -c
