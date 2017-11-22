@@ -1,0 +1,34 @@
+{
+  "name": "jvectormap",
+  "version": "3.0.0",
+  "description": "jQuery plugin for embedding vector maps with reach API and methods for data visualization to the web-pages.",
+  "main": "jquery-jvectormap.js",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meshwara/jvectormap.git"
+  },
+  "author": "Kirill Lebedev <echo.bjornd@gmail.com>",
+  "license": "(AGPL OR Commercial)",
+  "bugs": {
+    "url": "https://github.com/meshwara/jvectormap/issues"
+  },
+  "homepage": "http://jvectormap.com",
+  "contributors": [
+    "D. Prameswara <meshwara@gmail.com>"
+  ],
+  "scripts": {
+    "build": "./build.sh",
+    "prepublish": "npm run build"
+  },
+  "dependencies": {
+    "jquery": ">=1.5",
+    "jquery-mousewheel": "https://github.com/geeksoftteam/jquery-mousewheel.git"
+  },
+  "devDependencies": {
+    "uglify-js": "^3.0.0"
+  }  
+}
