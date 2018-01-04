@@ -426,9 +426,7 @@ if (!Array.prototype.indexOf) {
     }
     return -1;
   };
-}
-
-module.exports = jvm;/**
+}/**
  * Basic wrapper for DOM element.
  * @constructor
  * @param {String} name Tag name of the element
